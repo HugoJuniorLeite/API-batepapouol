@@ -1,0 +1,31 @@
+{
+  "name": "projeto13-batepapo-uol-api",
+  "description": "",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HugoJuniorLeite/API-batepapouol.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HugoJuniorLeite/API-batepapouol/issues"
+  },
+  "homepage": "https://github.com/HugoJuniorLeite/API-batepapouol#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "modules": "^0.4.0",
+    "mongodb": "^4.13.0",
+    "node": "^19.3.0",
+    "nodemon": "^2.0.20"
+  }
+}
