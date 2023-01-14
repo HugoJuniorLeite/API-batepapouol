@@ -84,12 +84,13 @@ const {user} =req.headers
 const messageSchema = joi.object({
     to: joi.string().required(),
     text: joi.string().required(),
-    type: joi.string().required()
+    type: joi.string().valid("message","private_message").required(),
+    user: joi.required()
 })
 try{
     
     
-    const validation = messageSchema.validate({to, text, type}, { abortEarly: false });
+    const validation = messageSchema.validate({to, text, type, user}, { abortEarly: false });
     if (validation.error) {
         const errors = validation.error.details.map((detail) => detail.message);
         return res.status(422).send(errors);
