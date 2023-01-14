@@ -3,7 +3,7 @@ import express from 'express'
 import cors from 'cors'
 import { MongoClient } from 'mongodb'
 import dayjs from 'dayjs'
-import joy from 'joy'
+import joi from 'joi'
 
 dotenv.config();
 
@@ -42,11 +42,22 @@ app.get("/messages", async (req, res) => {
 app.post("/participants", async (req, res) => {
     const { name } = req.body;
 
-    try {
-             const user = await db.collection('participants').findOne({name:name}) 
-           if(user){return res.status(422).send("usuario já existe na sala")}
+    const nameSchema = joi.object({
+        name: joi.string().required()
+        
+    })
 
-        if (!name || typeof name !== "string") return res.status(422).send("O campo nome é obrigatorio")
+
+    try {
+
+        const validation = nameSchema.validate(name, { abortEarly: true });
+
+if (validation.error) {
+  return res.status(422).send(validation.error.message)
+}
+
+             const user = await db.collection('participants').findOne({name:name}) 
+           if(user){return res.status(409).send("usuario já existe na sala")}
 
         await db.collection("participants").insertOne({
             name: name,
