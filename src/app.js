@@ -23,7 +23,7 @@ mongoClient.connect()
 app.get("/participants", async (req, res) => {
 
     try {
-        const participants = await db.collection("/participants").find().toArray();
+        const participants = await db.collection("participants").find().toArray();
         res.send(participants);
 
     } catch (err) { return res.status(500).send(err.message) }
@@ -32,7 +32,7 @@ app.get("/participants", async (req, res) => {
 app.get("/messages", async (req, res) => {
 
     try {
-        const messages = await db.collection("/messages").find().toArray();
+        const messages = await db.collection("messages").find().toArray();
         res.send(messages);
 
     } catch (err) { return res.status(500).send(err.message) }
@@ -47,12 +47,12 @@ app.post("/participants", async (req, res) => {
 
         if (!name || typeof name !== "string") return res.status(422).send("O campo nome é obrigatorio")
 
-        await db.collection("/participants").insertOne({
+        await db.collection("participants").insertOne({
             name: name,
             lastStatus: Date.now()
         })
 
-        await db.collection("/messages").insertOne({
+        await db.collection("messages").insertOne({
             from: name,
             to: 'Todos',
             text: 'entra na sala...',
@@ -69,7 +69,7 @@ const user =req.header
 
 try{ 
 
-    await db.collection("/messages").insertOne({
+    await db.collection("messages").insertOne({
         from: user,
         to:to,
         text:text,
