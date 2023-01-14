@@ -1,0 +1,1 @@
+{"scripts":{"test":"bash ./.hub/startup.sh","setup":"npm i"},"slug":"my-store-ultra-system-incremented-mongo-v3"}

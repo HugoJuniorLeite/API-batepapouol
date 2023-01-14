@@ -1,0 +1,14 @@
+{
+  "files.exclude": {
+    ".gitignore": false,
+    "**/.hub": true,
+    "**/jest.config.js": true,
+    "**/package*.json": false,
+    "**/tsconfig.json": true,
+    "**/.vscode": true,
+    "**/.git": true,
+    "**/.env*": false,
+    "**/tests*": true,
+    "**/.babelrc": true
+  }
+}
