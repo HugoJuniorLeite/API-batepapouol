@@ -20,24 +20,22 @@ mongoClient.connect()
         db = mongoClient.db()
     })
 
-app.get("/participants",async (req,res) =>{
+app.get("/participants", async (req, res) => {
 
-try{
-const participants = await db.collection("/participants").find().toArray();
-res.send(participants);
+    try {
+        const participants = await db.collection("/participants").find().toArray();
+        res.send(participants);
 
-}catch(err){return res.status(500).send(err.message)}
-
+    } catch (err) { return res.status(500).send(err.message) }
 })
 
-app.get("/messages", async (req,res)=>{
+app.get("/messages", async (req, res) => {
 
-try{
-const messages = await db.collection("/messages").find().toArray();
-res.send(messages);
+    try {
+        const messages = await db.collection("/messages").find().toArray();
+        res.send(messages);
 
-}catch(err){ return res.status(500).send(err.message)}
-
+    } catch (err) { return res.status(500).send(err.message) }
 })
 
 app.post("/participants", async (req, res) => {
@@ -64,6 +62,25 @@ app.post("/participants", async (req, res) => {
         return res.sendStatus(201)
     } catch (err) { return res.status(500).send(err.message) }
 });
+
+app.post("/messages",async (req,res)=>{
+const {to, text,type } = req.body
+const user =req.header
+
+try{ 
+
+    await db.collection("/messages").insertOne({
+        from: user,
+        to:to,
+        text:text,
+        type:type,
+        time: dayjs().format('HH:mm:ss')
+    })
+
+    return res.sendStatus(201)
+}catch(err){return res.status(500).send(err.message)}
+});
+
 
 
 const PORT = process.env.PORT_SEVER
