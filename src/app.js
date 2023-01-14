@@ -3,6 +3,7 @@ import express from 'express'
 import cors from 'cors'
 import { MongoClient } from 'mongodb'
 import dayjs from 'dayjs'
+import joy from 'joy'
 
 dotenv.config();
 
@@ -42,8 +43,8 @@ app.post("/participants", async (req, res) => {
     const { name } = req.body;
 
     try {
-        //     const user = await db.collection('participants').findOne({name:name}) 
-        //   if(user){return res.status(422).send("usuario já existe na sala")}
+             const user = await db.collection('participants').findOne({name:name}) 
+           if(user){return res.status(422).send("usuario já existe na sala")}
 
         if (!name || typeof name !== "string") return res.status(422).send("O campo nome é obrigatorio")
 
@@ -65,11 +66,12 @@ app.post("/participants", async (req, res) => {
 
 app.post("/messages",async (req,res)=>{
 const {to, text,type } = req.body
-const user =req.header
-
+const {user} =req.headers
+console.log(user)
 try{ 
 
     await db.collection("messages").insertOne({
+        
         from: user,
         to:to,
         text:text,
@@ -80,8 +82,6 @@ try{
     return res.sendStatus(201)
 }catch(err){return res.status(500).send(err.message)}
 });
-
-
 
 const PORT = process.env.PORT_SEVER
 app.listen(PORT, () => {
