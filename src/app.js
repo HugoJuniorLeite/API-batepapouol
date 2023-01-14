@@ -15,7 +15,6 @@ app.use(express.json());
 const mongoClient = new MongoClient(process.env.DATABASE_URL)
 let db
 
-
 mongoClient.connect()
     .then(() => {
         db = mongoClient.db()
@@ -40,21 +39,21 @@ app.get("/messages", async (req, res) => {
 })
 
 app.post("/participants", async (req, res) => {
-    const { name } = req.body;
+    const  name  = req.body;
 
     const nameSchema = joi.object({
-        name: joi.string().required()
-        
+        name : joi.string().required(),
+      
     })
-
 
     try {
 
-        const validation = nameSchema.validate(name, { abortEarly: true });
+        const validation = nameSchema.validate(name, { abortEarly: false });
+        if (validation.error) {
+            const errors = validation.error.details.map((detail) => detail.message);
 
-if (validation.error) {
-  return res.status(422).send(validation.error.message)
-}
+            return res.status(422).send(errors);
+          }
 
              const user = await db.collection('participants').findOne({name:name}) 
            if(user){return res.status(409).send("usuario já existe na sala")}
@@ -70,7 +69,11 @@ if (validation.error) {
             text: 'entra na sala...',
             type: 'status',
             time: dayjs().format('HH:mm:ss')
+        
         })
+
+        
+
         return res.sendStatus(201)
     } catch (err) { return res.status(500).send(err.message) }
 });
@@ -78,7 +81,7 @@ if (validation.error) {
 app.post("/messages",async (req,res)=>{
 const {to, text,type } = req.body
 const {user} =req.headers
-console.log(user)
+
 try{ 
 
     await db.collection("messages").insertOne({
