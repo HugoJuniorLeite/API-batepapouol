@@ -30,6 +30,16 @@ res.send(participants);
 
 })
 
+app.get("/messages", async (req,res)=>{
+
+try{
+const messages = await db.collection("/messages").find().toArray();
+res.send(messages);
+
+}catch(err){ return res.status(500).send(err.message)}
+
+})
+
 app.post("/participants", async (req, res) => {
     const { name } = req.body;
 
@@ -44,7 +54,7 @@ app.post("/participants", async (req, res) => {
             lastStatus: Date.now()
         })
 
-        await db.collection("/message").insertOne({
+        await db.collection("/messages").insertOne({
             from: name,
             to: 'Todos',
             text: 'entra na sala...',
