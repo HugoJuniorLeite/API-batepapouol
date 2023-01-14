@@ -20,15 +20,15 @@ mongoClient.connect()
         db = mongoClient.db()
     })
 
-app.get("/participants"),async (req,res) =>{
+app.get("/participants",async (req,res) =>{
 
 try{
 const participants = await db.collection("/participants").find().toArray();
-res.send(participants)
+res.send(participants);
 
 }catch(err){return res.status(500).send(err.message)}
 
-}
+})
 
 app.post("/participants", async (req, res) => {
     const { name } = req.body;
