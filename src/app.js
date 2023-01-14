@@ -39,19 +39,18 @@ app.get("/messages", async (req, res) => {
 })
 
 app.post("/participants", async (req, res) => {
-    const  name  = req.body;
+    const  {name} = req.body;
 
     const nameSchema = joi.object({
-        name : joi.string().required(),
+        name : joi.string().required()
       
     })
 
     try {
 
-        const validation = nameSchema.validate(name, { abortEarly: false });
+        const validation = nameSchema.validate({name}, { abortEarly: false });
         if (validation.error) {
             const errors = validation.error.details.map((detail) => detail.message);
-
             return res.status(422).send(errors);
           }
 
