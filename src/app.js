@@ -95,6 +95,11 @@ try{
         const errors = validation.error.details.map((detail) => detail.message);
         return res.status(422).send(errors);
     }
+    
+    const user1 = await db.collection('participants').findOne({user:user.user})
+    console.log(user1) 
+           if(!user1){return res.status(409).send("usuario não cadastrado")}
+
 
     await db.collection("messages").insertOne({
         
