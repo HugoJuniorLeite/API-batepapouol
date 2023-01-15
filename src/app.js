@@ -41,7 +41,7 @@ app.get("/messages", async (req, res) => {
 
 
 
-        if(!limit && limit !==0){
+        if(!limit){
             const messages = await db.collection("messages").find({
                 $or:
                     [
