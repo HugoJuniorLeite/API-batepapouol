@@ -42,7 +42,7 @@ app.get("/messages", async (req, res) => {
                     { type: "status" },
                     {from:user}
                 ]
-        }).limit(limit).sort({time:1}).toArray();
+        }).sort({time:-1}).limit(limit).toArray();
 
         res.send(messages);
 
