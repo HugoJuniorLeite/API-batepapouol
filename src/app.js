@@ -35,9 +35,9 @@ console.log(user)
 let arr =[]
 
     try {
-        const messagesPrivate = await db.collection("messages").find({type:"private_message"}).toArray();
+        const messagesPrivate = await db.collection("messages").find({$and: [{to:user, type:"private_message"}]}).toArray();
         const messages = await db.collection("messages").find().toArray();
-        const status = await db.collection("messages").find({type:"status"}).toArray();
+        const status = await db.collection("messages").find({type: {$nin : ["private_message"]} }).toArray();
  
     
         //      const messages1 = await db.collection("messages").find({messages.to:user}).toArray();
@@ -46,7 +46,7 @@ let arr =[]
       //      arr.push(messages)
     //    }
   //  console.log(arr)
-        res.send(messages);
+        res.send({...messagesPrivate,...status});
 
     } catch (err) { return res.status(500).send(err.message) }
 })
