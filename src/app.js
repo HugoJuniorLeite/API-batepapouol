@@ -39,7 +39,7 @@ app.get("/messages", async (req, res) => {
     // })
     try {
 
-        if( limit < 1 || typeof limit !== "number"){
+        if( limit  < 1 || typeof limit !== "number"){
             return res.status(422).send("valores invalidos")
         }
         // const validation = limitSchema.validate({ limit}, { abortEarly: true });
@@ -60,7 +60,7 @@ app.get("/messages", async (req, res) => {
 
         res.send(messages);
 
-    } catch (err) { return res.status(500).send(err.message) }
+    } catch (err) { return res.status(422).send(err.message) }
 })
 
 app.post("/participants", async (req, res) => {
@@ -117,7 +117,7 @@ app.post("/messages", async (req, res) => {
         }
 
         const user1 = await db.collection('participants').findOne({ user: user.user })
-        console.log(user1)
+       
         if (!user1) { return res.status(422).send("usuario não cadastrado") }
 
         await db.collection("messages").insertOne({
@@ -131,6 +131,19 @@ app.post("/messages", async (req, res) => {
         return res.sendStatus(201)
     } catch (err) { return res.status(500).send(err.message) }
 });
+
+app.post("/status",async (req, res)=>{
+const {user} =req.headers
+
+try{
+
+const userActive = await db.collection("participants").find({user: user.user})
+if(!userActive){ return res.sendStatus(404)}
+
+
+
+}catch(err){return res.status(500).send(err.message)}
+})
 
 const PORT = process.env.PORT_SERVER
 app.listen(PORT, () => {
