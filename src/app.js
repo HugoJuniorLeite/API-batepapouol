@@ -39,14 +39,30 @@ app.get("/messages", async (req, res) => {
     // })
     try {
 
-        // if( limit  < 1 || typeof limit !== "number"){
-        //     return res.status(422).send("valores invalidos")
-        // }
+
+
+        if(!limit){
+            const messages = await db.collection("messages").find({
+                $or:
+                    [
+                        { to: user, type: "private_message" },
+                        { type: "message" },
+                        { type: "status" },
+                        {from:user}
+                    ]
+            }).toArray();
+    
+            res.send(messages);
+
+        }else{
         // const validation = limitSchema.validate({ limit}, { abortEarly: true });
         // if (validation.error) {
         //     const errors = validation.error.details.map((detail) => detail.message);
         //     return res.status(422).send(errors);
         // }
+        if( limit  < 1 || typeof limit !== "number"){
+            return res.status(422).send("valores invalidos")
+        }
 
         const messages = await db.collection("messages").find({
             $or:
@@ -59,8 +75,8 @@ app.get("/messages", async (req, res) => {
         }).limit(limit).sort({_id:-1}).toArray();
 
         res.send(messages);
-
-    } catch (err) { return res.status(422).send(err.message) }
+    }
+    } catch (err) { return res.status(500).send(err.message) }
 })
 
 app.post("/participants", async (req, res) => {
@@ -139,8 +155,6 @@ try{
 
 const userActive = await db.collection("participants").findOne({user: user.user})
 if(!userActive){ return res.sendStatus(404)}
-
-
 
 }catch(err){return res.status(500).send(err.message)}
 })
