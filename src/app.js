@@ -33,7 +33,17 @@ app.get("/messages", async (req, res) => {
     const { user } = req.headers
     const limit = Number(req.query.limit)
 
+    const limitSchema = joi.object({
+        limit: joi.number().min(1)
+    })
     try {
+
+        const validation = limitSchema.validate({ limit}, { abortEarly: false });
+        if (validation.error) {
+            const errors = validation.error.details.map((detail) => detail.message);
+            return res.status(422).send(errors);
+        }
+
         const messages = await db.collection("messages").find({
             $or:
                 [
