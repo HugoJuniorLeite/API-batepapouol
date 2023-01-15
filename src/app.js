@@ -41,7 +41,7 @@ app.get("/messages", async (req, res) => {
 
 
 
-        if(!limit){
+        if(!limit && limit !==0){
             const messages = await db.collection("messages").find({
                 $or:
                     [
@@ -154,6 +154,8 @@ const {user} =req.headers
 try{
 
 const userActive = await db.collection("participants").findOne({user: user.user})
+
+
 if(!userActive){ return res.sendStatus(404)}
 
 }catch(err){return res.status(500).send(err.message)}
