@@ -153,7 +153,7 @@ const {user} =req.headers
 
 try{
 
-const userActive = await db.collection("participants").findOne({user: user.user})
+const userActive = await db.collection("participants").findOne({name: user.user})
 
 
 if(!userActive){ return res.sendStatus(404)}
