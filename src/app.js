@@ -39,7 +39,8 @@ app.get("/messages", async (req, res) => {
                 [
                     { to: user, type: "private_message" },
                     { type: "message" },
-                    { type: "status" }
+                    { type: "status" },
+                    {from:user}
                 ]
         }).toArray();
 
