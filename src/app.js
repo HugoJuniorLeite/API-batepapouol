@@ -172,7 +172,7 @@ app.post("/status", async (req, res) => {
                  db.collection("participants").deleteOne({name:user})
                          }    
 
-    },15000)    
+    },14000)    
         
 
         // setInterval (()=>{
