@@ -177,7 +177,7 @@ app.post("/status", async (req, res) => {
                 
         
 
-        }, 15000)
+        }, 10000)
 
 
         // setInterval (()=>{
