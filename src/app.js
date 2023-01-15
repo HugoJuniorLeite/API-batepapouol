@@ -151,8 +151,11 @@ const {user} =req.headers
 try{
 
 const userActive = await db.collection("participants").findOne({name: user})
-console.log(userActive)
 if(!userActive){ return res.sendStatus(404)}
+
+           await db.collection("participants").updateOne(
+                    {name:user},
+                     {$set : {lastStatus: Date.now()}})
 
 
 return res.sendStatus(200)
