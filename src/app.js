@@ -31,7 +31,7 @@ app.get("/participants", async (req, res) => {
 
 app.get("/messages", async (req, res) => {
     const { user } = req.headers
-    const limit = req.query.limit
+    const limit = Number(req.query.limit)
 
     try {
         const messages = await db.collection("messages").find({
@@ -42,7 +42,7 @@ app.get("/messages", async (req, res) => {
                     { type: "status" },
                     {from:user}
                 ]
-        }).limit(Number(limit)).toArray();
+        }).limit(limit).sort({time:1}).toArray();
 
         res.send(messages);
 
