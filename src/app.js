@@ -33,13 +33,10 @@ app.get("/messages", async (req, res) => {
     const { user } = req.headers
     const limit = Number(req.query.limit)
 
-
     // const limitSchema = joi.object({
     //     limit: joi.min(1)
     // })
     try {
-
-
 
         if(!limit){
             const messages = await db.collection("messages").find({
@@ -153,10 +150,12 @@ const {user} =req.headers
 
 try{
 
-const userActive = await db.collection("participants").findOne({name: user.user})
-
-
+const userActive = await db.collection("participants").findOne({name: user})
+console.log(userActive)
 if(!userActive){ return res.sendStatus(404)}
+
+
+return res.sendStatus(200)
 
 }catch(err){return res.status(500).send(err.message)}
 })
