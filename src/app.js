@@ -39,9 +39,9 @@ app.get("/messages", async (req, res) => {
     // })
     try {
 
-        if( limit  < 1 || typeof limit !== "number"){
-            return res.status(422).send("valores invalidos")
-        }
+        // if( limit  < 1 || typeof limit !== "number"){
+        //     return res.status(422).send("valores invalidos")
+        // }
         // const validation = limitSchema.validate({ limit}, { abortEarly: true });
         // if (validation.error) {
         //     const errors = validation.error.details.map((detail) => detail.message);
@@ -137,7 +137,7 @@ const {user} =req.headers
 
 try{
 
-const userActive = await db.collection("participants").find({user: user.user})
+const userActive = await db.collection("participants").findOne({user: user.user})
 if(!userActive){ return res.sendStatus(404)}
 
 
