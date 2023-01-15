@@ -34,16 +34,14 @@ app.get("/messages", async (req, res) => {
     const limit = Number(req.query.limit)
 
 
-    if( limit < 1 || typeof limit !== "number"){
-        return res.status(422).send("valores invalidos")
-    }
-
     // const limitSchema = joi.object({
     //     limit: joi.min(1)
     // })
     try {
 
-
+        if( limit < 1 || typeof limit !== "number"){
+            return res.status(422).send("valores invalidos")
+        }
         // const validation = limitSchema.validate({ limit}, { abortEarly: true });
         // if (validation.error) {
         //     const errors = validation.error.details.map((detail) => detail.message);
