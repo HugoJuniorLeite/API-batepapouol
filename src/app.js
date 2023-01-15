@@ -30,23 +30,20 @@ app.get("/participants", async (req, res) => {
 })
 
 app.get("/messages", async (req, res) => {
-const {user} = req.headers
-console.log(user)
-let arr =[]
+    const { user } = req.headers
+    let arr = []
 
     try {
-        const messagesPrivate = await db.collection("messages").find({$or: [{to:user, type:"private_message"},{type:"message"},{type:"status"}]}).toArray();
-//        const messages = await db.collection("messages").find().toArray();
-//        const status = await db.collection("messages").find({type: {$nin : ["private_message"]} }).toArray();
-// const result = {...messagesPrivate,...status}
-  //  console.log(messagesPrivate, typeof messagesPrivate)
-        //      const messages1 = await db.collection("messages").find({messages.to:user}).toArray();
-    //    if(messages.to == user || messages.to == "Todos" || messages.from == user || messages.type == "status"){
-            
-      //      arr.push(messages)
-    //    }
-  //  console.log(arr)
-        res.send(messagesPrivate);
+        const messages = await db.collection("messages").find({
+            $or:
+                [
+                    { to: user, type: "private_message" },
+                    { type: "message" },
+                    { type: "status" }
+                ]
+        }).toArray();
+
+        res.send(messages);
 
     } catch (err) { return res.status(500).send(err.message) }
 })
