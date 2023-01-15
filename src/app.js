@@ -38,41 +38,41 @@ app.get("/messages", async (req, res) => {
     // })
     try {
 
-        if(!limit){
+        if (!limit) {
             const messages = await db.collection("messages").find({
                 $or:
                     [
                         { to: user, type: "private_message" },
                         { type: "message" },
                         { type: "status" },
-                        {from:user}
+                        { from: user }
                     ]
             }).toArray();
-    
+
             res.send(messages);
 
-        }else{
-        // const validation = limitSchema.validate({ limit}, { abortEarly: true });
-        // if (validation.error) {
-        //     const errors = validation.error.details.map((detail) => detail.message);
-        //     return res.status(422).send(errors);
-        // }
-        if( limit  < 1 || typeof limit !== "number"){
-            return res.status(422).send("valores invalidos")
+        } else {
+            // const validation = limitSchema.validate({ limit}, { abortEarly: true });
+            // if (validation.error) {
+            //     const errors = validation.error.details.map((detail) => detail.message);
+            //     return res.status(422).send(errors);
+            // }
+            if (limit < 1 || typeof limit !== "number") {
+                return res.status(422).send("valores invalidos")
+            }
+
+            const messages = await db.collection("messages").find({
+                $or:
+                    [
+                        { to: user, type: "private_message" },
+                        { type: "message" },
+                        { type: "status" },
+                        { from: user }
+                    ]
+            }).limit(limit).sort({ _id: -1 }).toArray();
+
+            res.send(messages);
         }
-
-        const messages = await db.collection("messages").find({
-            $or:
-                [
-                    { to: user, type: "private_message" },
-                    { type: "message" },
-                    { type: "status" },
-                    {from:user}
-                ]
-        }).limit(limit).sort({_id:-1}).toArray();
-
-        res.send(messages);
-    }
     } catch (err) { return res.status(500).send(err.message) }
 })
 
@@ -130,7 +130,7 @@ app.post("/messages", async (req, res) => {
         }
 
         const user1 = await db.collection('participants').findOne({ user: user.user })
-       
+
         if (!user1) { return res.status(422).send("usuario não cadastrado") }
 
         await db.collection("messages").insertOne({
@@ -145,22 +145,30 @@ app.post("/messages", async (req, res) => {
     } catch (err) { return res.status(500).send(err.message) }
 });
 
-app.post("/status",async (req, res)=>{
-const {user} =req.headers
+app.post("/status", async (req, res) => {
+    const { user } = req.headers
 
-try{
+    try {
 
-const userActive = await db.collection("participants").findOne({name: user})
-if(!userActive){ return res.sendStatus(404)}
+        const userActive = await db.collection("participants").findOne({ name: user })
+        if (!userActive) { return res.sendStatus(404) }
 
-           await db.collection("participants").updateOne(
-                    {name:user},
-                     {$set : {lastStatus: Date.now()}})
+        const time = Date.now() - userActive.lastStatus
 
+        await db.collection("participants").updateOne(
+            { name: user },
+            { $set: { lastStatus: Date.now() } })
 
-return res.sendStatus(200)
+       setInterval (()=>{
+        if( time > 10000){
+            db.collection("participants").deleteOne({name:user})
+                    }
+       },1500)    
+        
 
-}catch(err){return res.status(500).send(err.message)}
+        return res.sendStatus(200)
+
+    } catch (err) { return res.status(500).send(err.message) }
 })
 
 const PORT = process.env.PORT_SERVER
