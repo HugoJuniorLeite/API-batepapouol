@@ -36,7 +36,7 @@ let arr =[]
 
     try {
         const messagesPrivate = await db.collection("messages").find({type:"private_message"}).toArray();
-        const messages = await db.collection("messages").find({type:"message"}).toArray();
+        const messages = await db.collection("messages").find().toArray();
         const status = await db.collection("messages").find({type:"status"}).toArray();
  
     
