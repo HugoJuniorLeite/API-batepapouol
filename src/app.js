@@ -152,34 +152,39 @@ app.post("/status", async (req, res) => {
 
         const userActive = await db.collection("participants").findOne({ name: user })
         if (!userActive) { return res.sendStatus(404) }
-        
 
-        
-        setInterval  (async()=>{
-             
+
+
+        setInterval(async () => {
+
             const time = Date.now() - userActive.lastStatus
-        //  const time = Date.now() -10000
-        //  const outParticipants = await db.collection("participants").findOne({
-        //      lastStatus: {$lte : time }
-        //  })
+            //  const time = Date.now() -10000
+            //  const outParticipants = await db.collection("participants").findOne({
+            //      lastStatus: {$lte : time }
+            //  })
 
-        //  if(outParticipants.lenght >0){
-//             db.collection("participants").deleteOne({name:user})
-            
-// console.log(outParticipants)
-            
-             if( time >= 10000){
-                 db.collection("participants").deleteOne({name:user})
-                         }    
+            //  if(outParticipants.lenght >0){
+            //             db.collection("participants").deleteOne({name:user})
 
-    },14000)    
+            // console.log(outParticipants)
+
+            if (time > 10000) {
+                db.collection("participants").deleteOne({ name: user })
+                db.collection("messeges").insertOne({ from: user, to: 'Todos', text: 'sai da sala...', type: 'status', time: dayjs().format('HH:MM:SS') })
+            }
+                
+                
+                
         
+
+        }, 15000)
+
 
         // setInterval (()=>{
-        
+
         //    },15000)    
-        
-            
+
+
         await db.collection("participants").updateOne(
             { name: user },
             { $set: { lastStatus: Date.now() } })
