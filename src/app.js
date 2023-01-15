@@ -36,17 +36,17 @@ let arr =[]
 
     try {
         const messagesPrivate = await db.collection("messages").find({$and: [{to:user, type:"private_message"}]}).toArray();
-        const messages = await db.collection("messages").find().toArray();
+//        const messages = await db.collection("messages").find().toArray();
         const status = await db.collection("messages").find({type: {$nin : ["private_message"]} }).toArray();
- 
-    
+ const result = [{...messagesPrivate,...status}]
+    console.log(result, typeof result)
         //      const messages1 = await db.collection("messages").find({messages.to:user}).toArray();
     //    if(messages.to == user || messages.to == "Todos" || messages.from == user || messages.type == "status"){
             
       //      arr.push(messages)
     //    }
   //  console.log(arr)
-        res.send({...messagesPrivate,...status});
+        res.send(result);
 
     } catch (err) { return res.status(500).send(err.message) }
 })
