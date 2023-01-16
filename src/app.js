@@ -159,9 +159,9 @@ app.post("/status", async (req, res) => {
 
         
         setInterval  (async()=>{
-            const time = (Date.now() -lastStatus)
+            const time = (Date.now() -10000)
             
-           await db.collection("participants").deleteMany({lastStatus: {$gte : time}})
+           await db.collection("participants").deleteMany({lastStatus: {$lte : time}})
             // if( 10000 < time ){
 
          //       db.collection("messeges").insertOne({ from: user, to: 'Todos', text: 'sai da sala...', type: 'status', time: dayjs().format('HH:mm:ss') })
