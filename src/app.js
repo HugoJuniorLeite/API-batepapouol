@@ -147,53 +147,31 @@ app.post("/messages", async (req, res) => {
 
 app.post("/status", async (req, res) => {
     const { user } = req.headers
-
+    
     try {
-
+        
         const userActive = await db.collection("participants").findOne({ name: user })
         if (!userActive) { return res.sendStatus(404) }
         
+        await db.collection("participants").updateOne(
+        { name: user },
+        { $set: { lastStatus: Date.now() } })
         
         
-        console.log(Date.now())
-
+        return res.sendStatus(200)
         
+        } catch (err) { return res.status(500).send(err.message) }
+        })
+        
+        const time = (Date.now() -10000)
+  
         setInterval  (async()=>{
-            const time = (Date.now() -10000)
             
            await db.collection("participants").deleteMany({lastStatus: {$lte : time}})
-            // if( 10000 < time ){
-
-         //       db.collection("messeges").insertOne({ from: user, to: 'Todos', text: 'sai da sala...', type: 'status', time: dayjs().format('HH:mm:ss') })
-            // }    
             
         },15000)    
         
         
-        //  const time = Date.now() -10000
-        //  const outParticipants = await db.collection("participants").findOne({
-        //      lastStatus: {$lte : time }
-        //  })
-
-        //  if(outParticipants.lenght >0){
-//             db.collection("participants").deleteOne({name:user})
-            
-// console.log(outParticipants)
-            
-        // setInterval (()=>{
-        
-        //    },15000)    
-        
-            
-        await db.collection("participants").updateOne(
-            { name: user },
-            { $set: { lastStatus: Date.now() } })
-
-
-        return res.sendStatus(200)
-
-    } catch (err) { return res.status(500).send(err.message) }
-})
 
 const PORT = process.env.PORT_SERVER
 app.listen(PORT, () => {
