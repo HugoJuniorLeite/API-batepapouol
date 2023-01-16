@@ -37,7 +37,9 @@ app.get("/messages", async (req, res) => {
     //     limit: joi.min(1)
     // })
     try {
-
+        if(limit === 0){
+            return res.status(422).send("valores invalidos")
+        }
         if (!limit) {
             const messages = await db.collection("messages").find({
                 $or:
@@ -49,14 +51,9 @@ app.get("/messages", async (req, res) => {
                     ]
             }).toArray();
 
-            res.send(messages);
+          return res.send(messages);
 
-        } else {
-            // const validation = limitSchema.validate({ limit}, { abortEarly: true });
-            // if (validation.error) {
-            //     const errors = validation.error.details.map((detail) => detail.message);
-            //     return res.status(422).send(errors);
-            // }
+        } 
             if (limit < 1 || typeof limit !== "number") {
                 return res.status(422).send("valores invalidos")
             }
@@ -72,7 +69,7 @@ app.get("/messages", async (req, res) => {
             }).limit(limit).sort({ _id: -1 }).toArray();
 
             res.send(messages);
-        }
+        
     } catch (err) { return res.status(500).send(err.message) }
 })
 
@@ -181,15 +178,9 @@ app.post("/status", async (req, res) => {
                     time: dayjs().format('HH:mm:ss')}
            }) 
            
-           console.log(outMessages)
-
            await db.collection("messages").insertMany(outMessages)
-
-
         },15000)    
         
-        
-
 const PORT = process.env.PORT_SERVER
 app.listen(PORT, () => {
     console.log(`servidor rodando na porta ${PORT}`)
