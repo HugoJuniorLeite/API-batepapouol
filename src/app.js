@@ -35,6 +35,9 @@ app.get("/messages", async (req, res) => {
 
   
     try {
+if(limit === isNaN || limit < 0){
+    return res.sendStatus(422);
+}
 
         if (!limit) {
             const messages = await db.collection("messages").find({
