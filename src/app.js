@@ -35,7 +35,7 @@ app.get("/messages", async (req, res) => {
 
   
     try {
-if(limit === isNaN || limit < 0 || limit === 0){
+if(limit === isNaN || limit < 0){
     return res.sendStatus(422);
 }
 
