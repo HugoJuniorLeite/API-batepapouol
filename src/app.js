@@ -168,12 +168,12 @@ app.post("/status", async (req, res) => {
             
 // console.log(outParticipants)
             
-             if( time > 10000){
+             if( 10000 < time ){
                  db.collection("participants").deleteOne({name:user})
-                 db.collection("messeges").insertOne({ from: user, to: 'Todos', text: 'sai da sala...', type: 'status', time: dayjs().format('HH:MM:SS') })
+                 db.collection("messeges").insertOne({ from: user, to: 'Todos', text: 'sai da sala...', type: 'status', time: dayjs().format('HH:mm:ss') })
                          }    
 
-    },14000)    
+    },15000)    
         
 
         // setInterval (()=>{
