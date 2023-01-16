@@ -154,9 +154,12 @@ app.post("/status", async (req, res) => {
         if (!userActive) { return res.sendStatus(404) }
         
         
-        const time = Date.now() - 10000
+        
+        console.log(Date.now())
+
         
         setInterval  (async()=>{
+            const time = (Date.now() -lastStatus)
             
            await db.collection("participants").deleteMany({lastStatus: {$gte : time}})
             // if( 10000 < time ){
