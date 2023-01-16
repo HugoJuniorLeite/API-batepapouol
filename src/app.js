@@ -163,10 +163,10 @@ app.post("/status", async (req, res) => {
         } catch (err) { return res.status(500).send(err.message) }
         })
         
-        const time = (Date.now() -10000)
-  
+        
         setInterval  (async()=>{
             
+        const time = (Date.now() -10000)
            await db.collection("participants").deleteMany({lastStatus: {$lte : time}})
             
         },15000)    
