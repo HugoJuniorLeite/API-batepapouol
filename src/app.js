@@ -157,20 +157,27 @@ app.post("/status", async (req, res) => {
         
         setInterval  (async()=>{
              
-            const time = Date.now() - userActive.lastStatus
-        //  const time = Date.now() -10000
-        //  const outParticipants = await db.collection("participants").findOne({
-        //      lastStatus: {$lte : time }
-        //  })
+            // const time = Date.now() - userActive.lastStatus
+         const time = Date.now() -10000
+         const outParticipants = await db.collection("participants").find({
+              lastStatus: {$lte : time }
+          }).toArray()
 
-        //  if(outParticipants.lenght >0){
+          if(outParticipants.lenght >0){
 //             db.collection("participants").deleteOne({name:user})
             
 // console.log(outParticipants)
             
-             if( 10000 < time ){
-                 db.collection("participants").deleteOne({name:user})
-                 db.collection("messeges").insertOne({ from: user, to: 'Todos', text: 'sai da sala...', type: 'status', time: dayjs().format('HH:mm:ss') })
+//  if( 10000 < time ){
+    const messageOut =  outParticipants.map((participants)=>{
+      return {from: user, to: 'Todos', text: 'sai da sala...', type: 'status', time: dayjs().format('HH:mm:ss')}  
+    })
+
+    await db.collection("messages").insertMany(messageOut)
+ //   await db.collection("messeges").insertOne({ from: user, to: 'Todos', text: 'sai da sala...', type: 'status', time: dayjs().format('HH:mm:ss') })
+                        await db.collection("participants").deleteMany({
+                            lastStatus: {$lte:time}
+                        })
                          }    
 
     },15000)    
