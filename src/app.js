@@ -153,36 +153,30 @@ app.post("/status", async (req, res) => {
         const userActive = await db.collection("participants").findOne({ name: user })
         if (!userActive) { return res.sendStatus(404) }
         
-
+        
+        const time = Date.now() - 10000
         
         setInterval  (async()=>{
-             
-            // const time = Date.now() - userActive.lastStatus
-         const time = Date.now() -10000
-         const outParticipants = await db.collection("participants").find({
-              lastStatus: {$lte : time }
-          }).toArray()
+            
+            db.collection("participants").deleteMany({lastStatus: {$gte : time}})
+            // if( 10000 < time ){
 
-          if(outParticipants.lenght >0){
+         //       db.collection("messeges").insertOne({ from: user, to: 'Todos', text: 'sai da sala...', type: 'status', time: dayjs().format('HH:mm:ss') })
+            // }    
+            
+        },15000)    
+        
+        
+        //  const time = Date.now() -10000
+        //  const outParticipants = await db.collection("participants").findOne({
+        //      lastStatus: {$lte : time }
+        //  })
+
+        //  if(outParticipants.lenght >0){
 //             db.collection("participants").deleteOne({name:user})
             
 // console.log(outParticipants)
             
-//  if( 10000 < time ){
-    const messageOut =  outParticipants.map((participants)=>{
-      return {from: user, to: 'Todos', text: 'sai da sala...', type: 'status', time: dayjs().format('HH:mm:ss')}  
-    })
-
-    await db.collection("messages").insertMany(messageOut)
- //   await db.collection("messeges").insertOne({ from: user, to: 'Todos', text: 'sai da sala...', type: 'status', time: dayjs().format('HH:mm:ss') })
-                        await db.collection("participants").deleteMany({
-                            lastStatus: {$lte:time}
-                        })
-                         }    
-
-    },15000)    
-        
-
         // setInterval (()=>{
         
         //    },15000)    
