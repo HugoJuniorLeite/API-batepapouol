@@ -167,17 +167,22 @@ app.post("/status", async (req, res) => {
         setInterval  (async()=>{
             
         const time = (Date.now() -10000)
-          const deleteParticipants = await db.collection("participants").deleteMany({lastStatus: {$lte : time}})
 
-           const outMessages = deleteParticipants.map((participant)=>{
+        const messageDelete = await db.collection("participants").find({lastStatus: {$lte : time}}).toArray()
+          const deleteParticipants = await db.collection("participants").deleteMany({lastStatus: {$lte : time}})
+                console.log(messageDelete, typeof messageDelete)
+
+           let outMessages = messageDelete.map((participant)=>{
             return {
                 from: participant.name,
                  to: 'Todos',
                   text: 'sai da sala...',
                    type: 'status',
-                    time: dayjs.Dayjs('HH:mm:ss')}
+                    time: dayjs().format('HH:mm:ss')}
            }) 
            
+           console.log(outMessages)
+
            await db.collection("messages").insertMany(outMessages)
 
 
